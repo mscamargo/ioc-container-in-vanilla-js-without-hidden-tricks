@@ -1,0 +1,24 @@
+{
+  "name": "ioc-container-poc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.mjs",
+    "test:cov": "c8 -r text -r html --all node test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mscamargo/ioc-container-poc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mscamargo/ioc-container-poc/issues"
+  },
+  "homepage": "https://github.com/mscamargo/ioc-container-poc#readme",
+  "devDependencies": {
+    "c8": "^7.12.0"
+  }
+}
