@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "deno",
+			"command": "run",
+			"args": [
+				"main.mjs"
+			],
+			"problemMatcher": [
+				"$deno"
+			],
+			"label": "deno: run main"
+		},
+		{
+			"type": "deno",
+			"command": "test",
+			"args": [
+				"--watch",
+				".",
+			],
+			"problemMatcher": [
+				"$deno-test"
+			],
+			"group": "test",
+			"label": "deno: test watch"
+		}
+	]
+}

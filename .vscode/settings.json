@@ -1,0 +1,12 @@
+{
+    "deno.enable": true,
+    "deno.unstable": true,
+    "deno.codeLens.implementations": true,
+    "deno.codeLens.references": true,
+    "deno.codeLens.test": true,
+    "deno.inlayHints.enumMemberValues.enabled": true,
+    "deno.inlayHints.parameterTypes.enabled": true,
+    "deno.inlayHints.propertyDeclarationTypes.enabled": true,
+    "deno.inlayHints.variableTypes.enabled": true,
+    "deno.suggest.completeFunctionCalls": true
+}
