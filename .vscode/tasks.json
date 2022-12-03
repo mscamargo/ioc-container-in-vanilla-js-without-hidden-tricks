@@ -5,7 +5,7 @@
 			"type": "deno",
 			"command": "run",
 			"args": [
-				"main.mjs"
+				"main.ts"
 			],
 			"problemMatcher": [
 				"$deno"
@@ -24,6 +24,18 @@
 			],
 			"group": "test",
 			"label": "deno: test watch"
+		},
+		{
+			"type": "deno",
+			"command": "test",
+			"args": [
+				".",
+			],
+			"problemMatcher": [
+				"$deno-test"
+			],
+			"group": "test",
+			"label": "deno: test"
 		}
 	]
 }

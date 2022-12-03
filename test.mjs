@@ -1,5 +1,5 @@
 import { assert, assertThrows, assertEquals } from 'https://deno.land/std@0.167.0/testing/asserts.ts'
-import { Container, Inject } from './main.mjs'
+import { Container, Inject } from './main.ts'
 
 Deno.test('Container.register()', async (t) => {
   const invalidTypeValues = [true, 1, {}, () => {}, null, undefined, NaN]
