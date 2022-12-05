@@ -1,4 +1,4 @@
-import { Constructor, Factory, Injectable, Registry, Token } from "./types.ts";
+import { Constructor, Factory, Injectable, Registry, Token } from "@/types.ts";
 export const Inject = Symbol("IoC::ProviderDependencies");
 
 export class Container {

@@ -8,5 +8,6 @@
     "deno.inlayHints.parameterTypes.enabled": true,
     "deno.inlayHints.propertyDeclarationTypes.enabled": true,
     "deno.inlayHints.variableTypes.enabled": true,
-    "deno.suggest.completeFunctionCalls": true
+    "deno.suggest.completeFunctionCalls": true,
+    "deno.importMap": "./import_map.json"
 }

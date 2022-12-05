@@ -1,4 +1,4 @@
-import { Container, Inject } from "./container.ts";
+import { Container, Inject } from "@/container.ts";
 
 export type Injectable = {
   [Inject]: Array<string | symbol>;
