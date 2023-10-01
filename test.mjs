@@ -1,30 +1,31 @@
-import { assert, assertThrows, assertEquals } from 'https://deno.land/std@0.167.0/testing/asserts.ts'
-import { Container, Inject } from './src/container.ts'
+import test from 'node:test'
+import assert from 'node:assert'
+import { Container, Inject } from './src/container.mjs'
 
-Deno.test('Container.register()', async (t) => {
+test('Container.register()', async (t) => {
   const invalidTypeValues = [true, 1, {}, () => {}, null, undefined, NaN]
   for (const value of invalidTypeValues) {
-    await t.step(`should NOT accept the type ${typeof value} as token`, () => {
-      assertThrows(
+    await t.test(`should NOT accept the type ${typeof value} as token`, () => {
+      assert.throws(
         () => new Container().register(value),
         { message: 'Invalid token type' }
       )
     })
   }
 
-  await t.step('should accept the type string as token', () => {
+  await t.test('should accept the type string as token', () => {
     assert(new Container().register('a string', 'any value provider') instanceof Container)
   })
 
-  await t.step('should accept the type symbol as token', () => {
+  await t.test('should accept the type symbol as token', () => {
     assert(new Container().register(Symbol('any'), 'any value provider') instanceof Container)
   })
 
-  await t.step('should accept a class reference as token', () => {
+  await t.test('should accept a class reference as token', () => {
     assert(new Container().register(class {}) instanceof Container)
   })
 
-  await t.step('should register a class provider correctly', () => {
+  await t.test('should register a class provider correctly', () => {
     const container = new Container()
 
     class Provider {}
@@ -33,22 +34,22 @@ Deno.test('Container.register()', async (t) => {
     assert(container.isRegistered(Provider))
   })
 
-  await t.step('should require a value or factory provider when a normal token is provided', () => {
-    assertThrows(
+  await t.test('should require a value or factory provider when a normal token is provided', () => {
+    assert.throws(
       () => new Container().register('normal'),
       { message: 'For a normal token a value or a factory provider is required' }
     )
   })
 
-  await t.step('should register a factory provider correctly', () => {
+  await t.test('should register a factory provider correctly', () => {
     const container = new Container()
     container.register('provider', () => {})
     assert(container.isRegistered('provider'))
   })
 })
 
-Deno.test('Container.resolve()', async (t) => {
-  await t.step('should instantiate a class', () => {
+test('Container.resolve()', async (t) => {
+  await t.test('should instantiate a class', () => {
     class Provider {}
 
     const instance = new Container()
@@ -57,7 +58,7 @@ Deno.test('Container.resolve()', async (t) => {
     assert(instance instanceof Provider)
   })
 
-  await t.step('should resolve the dependencies', () => {
+  await t.test('should resolve the dependencies', () => {
     class Provider1 {}
 
     class Provider2 {
@@ -76,7 +77,7 @@ Deno.test('Container.resolve()', async (t) => {
     assert(instance.provider1 instanceof Provider1)
   })
 
-  await t.step('should resolve the dependencies recursively', () => {
+  await t.test('should resolve the dependencies recursively', () => {
     class Provider1 {}
 
     class Provider2 {
@@ -105,7 +106,7 @@ Deno.test('Container.resolve()', async (t) => {
     assert(instance.provider2.provider1 instanceof Provider1)
   })
 
-  await t.step('should use the singleton pattern to resolve dependencies', () => {
+  await t.test('should use the singleton pattern to resolve dependencies', () => {
     class Provider {
       static constructionCount = 0
       constructor () {
@@ -116,10 +117,10 @@ Deno.test('Container.resolve()', async (t) => {
       .register(Provider)
     container.resolve(Provider)
     container.resolve(Provider)
-    assertEquals(Provider.constructionCount, 1)
+    assert.equal(Provider.constructionCount, 1)
   })
 
-  await t.step('should resolve a value provider', () => {
+  await t.test('should resolve a value provider', () => {
     class ClassProvider {
       static [Inject] = [
         'valueProvider'
@@ -133,10 +134,10 @@ Deno.test('Container.resolve()', async (t) => {
     container.register(ClassProvider)
     container.register('valueProvider', {})
     const instance = container.resolve(ClassProvider)
-    assertEquals(instance.vp, {})
+    assert.deepEqual(instance.vp, {})
   })
 
-  await t.step('should resolve a factory provider', () => {
+  await t.test('should resolve a factory provider', () => {
     class ClassProvider {
       static [Inject] = [
         'factoryProvider'
@@ -150,12 +151,12 @@ Deno.test('Container.resolve()', async (t) => {
     container.register(ClassProvider)
     container.register('factoryProvider', () => ({}))
     const instance = container.resolve(ClassProvider)
-    assertEquals(instance.fp, {})
+    assert.deepEqual(instance.fp, {})
   })
 
-  await t.step('should throw an error when the provider is not registered', () => {
+  await t.test('should throw an error when the provider is not registered', () => {
     class Provider {}
-    assertThrows(
+    assert.throws(
       () => new Container().resolve(Provider),
       { message: `The provider ${Provider.name} is not registered` }
     )
