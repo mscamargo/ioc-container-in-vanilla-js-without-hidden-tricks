@@ -1,15 +1,10 @@
-import { Container, Inject } from './src/container.ts'
+import { Container, Inject } from './src/container.mjs'
 /*******************************************************************************
  * EXAMPLES
  */
 
 const TODO_COLLECTION = Symbol("TodoRegistry");
 const ID_GENERATOR = "ID_GENERATOR";
-interface IdGenerator {
-  generate(): string;
-}
-
-type Todo = { id: string; name: string };
 
 class TodoRepository {
   static [Inject] = [
@@ -17,14 +12,26 @@ class TodoRepository {
     ID_GENERATOR,
   ];
 
+  /**
+   * 
+   * @param {Set} todoCollection 
+   * @param {*} idGenerator 
+   */
   constructor(
-    readonly todoCollection: Set<Todo>,
-    readonly idGenerator: IdGenerator,
+     todoCollection,
+     idGenerator,
   ) {
+    this.todoCollection = todoCollection
+    this.idGenerator = idGenerator
   }
 
-  add(name: string) {
-    const todo: Todo = {
+  /**
+   * 
+   * @param {string} name 
+   * @returns {Todo}
+   */
+  add(name) {
+    const todo = {
       id: this.idGenerator.generate(),
       name,
     };
@@ -38,10 +45,16 @@ class TodoService {
     TodoRepository,
   ];
 
-  constructor(readonly addTodoRepository: TodoRepository) {
+  constructor( addTodoRepository) {
+    this.addTodoRepository = addTodoRepository
   }
 
-  add(name: string) {
+  /**
+   * 
+   * @param {string} name 
+   * @returns 
+   */
+  add(name) {
     return this.addTodoRepository.add(name);
   }
 }
@@ -51,11 +64,16 @@ class AddTodoController {
     TodoService,
   ];
 
-  constructor(readonly addTodoService: TodoService) {
+  constructor(addTodoService) {
     this.addTodoService = addTodoService;
   }
 
-  handle(name: string) {
+  /**
+   * 
+   * @param {string} name 
+   * @returns 
+   */
+  handle(name) {
     return this.addTodoService.add(name);
   }
 }

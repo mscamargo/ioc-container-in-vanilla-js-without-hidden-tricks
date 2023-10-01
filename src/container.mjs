@@ -1,14 +1,11 @@
-import { Constructor, Factory, Injectable, Registry, Token } from "@/types.ts";
+
 export const Inject = Symbol("IoC::ProviderDependencies");
 
 export class Container {
-  #registry: Map<string | symbol, Registry> = new Map();
+  #registry= new Map();
   #singletons = new Map();
 
-  register(token: Constructor): this;
-  register(token: string | symbol, valueOrFactory: Factory): this;
-  register(token: string | symbol, valueOrFactory: any): this;
-  register(token: any, valueOrFactory?: any): this {
+  register(token, valueOrFactory) {
     if (!this.#isValid(token)) {
       throw new Error("Invalid token type");
     }
@@ -25,20 +22,17 @@ export class Container {
     return this;
   }
 
-  resolve<T>(ClassOrToken: Constructor<T>): T;
-  resolve<T>(ClassOrToken: string | symbol): T;
-  resolve(ClassOrToken: Constructor | string | symbol) {
-    const token: string | symbol = (<Constructor> ClassOrToken).name ??
-      ClassOrToken;
+  resolve(ClassOrToken) {
+    const token=  ClassOrToken.name ??  ClassOrToken;
     if (!this.isRegistered(ClassOrToken)) {
       throw new Error(`The provider ${token.toString()} is not registered`);
     }
     if (!this.#singletons.has(token)) {
-      const Provider: Registry = this.#registry.get(token)!;
-      let instance: unknown = Provider;
+      const Provider = this.#registry.get(token);
+      let instance = Provider;
       if (this.#isClass(Provider)) {
         const dependencies =
-          (Provider as unknown as Partial<Injectable>)[Inject]?.map((
+          Provider[Inject]?.map((
             dependency
           ) => this.resolve(dependency)) ?? [];
         instance = new Provider(...dependencies);
@@ -50,27 +44,27 @@ export class Container {
     return this.#singletons.get(token);
   }
 
-  isRegistered(token: Token) {
+  isRegistered(token) {
     return this.#registry.has(
       this.#isClass(token) ? token.name : token,
     );
   }
 
-  #isValid(token: Token): boolean {
+  #isValid(token) {
     return this.#isSymbol(token) ||
       this.#isString(token) ||
       this.#isClass(token);
   }
 
-  #isSymbol(val: unknown): val is symbol {
+  #isSymbol(val) {
     return typeof val === "symbol";
   }
 
-  #isString(val: unknown): val is string {
+  #isString(val) {
     return typeof val === "string";
   }
 
-  #isClass(val: unknown): val is Constructor {
+  #isClass(val) {
     return typeof val === "function" && val.toString().startsWith("class");
   }
 }
